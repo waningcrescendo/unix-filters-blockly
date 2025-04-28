@@ -46,19 +46,36 @@ function updateFilteredOutput() {
   });
 
   const outputDiv = document.getElementById('filteredOutput');
-  outputDiv.innerText = output.join('\n');
+  outputDiv.innerHTML = output.join('<br>');
 }
 
 function simulateBlock(block, lines) {
   switch (block.type) {
     case 'filter_grep':
       const pattern = block.getFieldValue('PATTERN');
-      const regex = new RegExp(pattern);
-      return lines.filter(line => regex.test(line));
-          default:
+      const option = block.getFieldValue('OPTION');
+
+      // voir pour mieux gérer les options et les combiner
+      let regexFlags = '';
+      if (option.includes('-i')) {
+        regexFlags += 'i';
+      }
+      
+      const regex = new RegExp(pattern, regexFlags);
+
+      if (option.includes('-v')) {
+        return lines.filter(line => !regex.test(line));
+      } else {
+        return lines.filter(line => regex.test(line)).map(line => {
+          return line.replace(regex, match => `<span class="highlight">${match}</span>`);
+        });
+      }
+
+    default:
       return lines;
   }
 }
+
 
 // Load the initial state from storage and run the code.
 load(ws);

@@ -59,11 +59,20 @@ jsonGenerator.forBlock['object'] = function(block, generator) {
   
 jsonGenerator.forBlock['filter_grep'] = function (block) {
     const pattern = block.getFieldValue('PATTERN');
+    const option = block.getFieldValue('OPTION');
     console.log(pattern);
-    const code = `grep "${pattern}"`;
+    console.log(option);
+    const code = `grep ${option} "${pattern}"`;
     return code;
 };
   
+jsonGenerator.forBlock['command_cat'] = function (block) {
+    const filename = block.getFieldValue('FILENAME');
+    console.log(filename);
+    const code = `cat ${filename}`;
+    return code;
+};
+
 jsonGenerator.scrub_ = function(block, code, thisOnly) {
     const nextBlock =
         block.nextConnection && block.nextConnection.targetBlock();

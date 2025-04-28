@@ -29,6 +29,10 @@ export const toolbox = {
     },
     {
       'kind': 'block',
+      'type': 'command_cat'
+    },
+    {
+      'kind': 'block',
       'type': 'math_number'
     },
     {

@@ -38,3 +38,8 @@ code {
 #output {
   height: 50%;
 }
+
+.highlight {
+  background-color: yellow;
+  font-weight: bold;
+}
