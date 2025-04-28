@@ -18,17 +18,17 @@ jsonGenerator.forBlock['command_cat'] = function (block) {
     return code;
 };
 
-jsonGenerator.forBlock['command_pipe'] = function (block) {
-    const command1 = jsonGenerator.statementToCode(block, 'COMMAND1');  
-    const command2 = jsonGenerator.statementToCode(block, 'COMMAND2'); 
+// jsonGenerator.forBlock['command_pipe'] = function (block) {
+//     const left = jsonGenerator.valueToCode(block, 'LEFT', jsonGenerator.ORDER_NONE);
+//     const right = jsonGenerator.valueToCode(block, 'RIGHT', jsonGenerator.ORDER_NONE);
 
-    let code = command1;
-    if (command2) {
-        code += ` | ${command2}`;  
-    }
+//     if (!left || !right) {
+//       return '';
+//     }
 
-    return code;  
-};
+//     const code = `${left} | ${right}`;
+//     return [code, jsonGenerator.ORDER_ATOMIC];
+// };
 
 
 jsonGenerator.scrub_ = function(block, code, thisOnly) {

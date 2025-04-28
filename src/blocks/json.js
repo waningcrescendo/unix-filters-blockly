@@ -15,40 +15,46 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
       "name": "PATTERN",
       "text": "pattern"
     }
-  ],
-  "previousStatement": null,
-  "nextStatement": null,
+    ],
+  "output":null,
+  "helpUrl":"https://fr.wikipedia.org/wiki/Grep",
   "colour": 230,
   },
+
   {
   "type": "command_cat",
-  "message0": "cat %1",
+  "message0": "cat %1 %2",
   "args0": [
      {
       "type": "field_input",
       "name": "FILENAME",
       "text": "nom du fichier"
+    },
+    {
+      "type": "input_value",
+      "name": "PIPE",
+      "check": "String"
     }
-  ],
-  "previousStatement": null,
-  "nextStatement": null,
+    ],
+  "helpUrl":"https://fr.wikipedia.org/wiki/Cat_(Unix)",
   "colour": 230,
   },
+
   {
     "type": "command_pipe",
-    "message0": "%1 | %2",
+    "message0": "|%1",
     "args0": [
-      {
-        "type": "input_statement",
-        "name": "COMMAND1"
-      },
-      {
-        "type": "input_statement",
-        "name": "COMMAND2"
-      }
-    ],
-    "previousStatement": null,
-    "nextStatement": null,
-    "colour": 230
+    {
+      "type": "input_value",
+      "name": "VALUE",
+      "check": "String"
+    }
+  ],
+    "output": null,
+    "helpUrl": "https://fr.wikipedia.org/wiki/Tube_(shell)",
+    "colour": 130
   }
+
+
+
 ]);
