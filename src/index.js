@@ -23,6 +23,7 @@ banane
 fraise
 kiwi
 `.trim();
+
 // Set up UI elements and inject Blockly
 const codeDiv = document.getElementById("generatedCode").firstChild;
 const blocklyDiv = document.getElementById("blocklyDiv");
@@ -44,79 +45,91 @@ function updateFilteredOutput() {
   blocks.forEach((block) => {
     output = simulateBlock(block, output);
   });
-
-  const outputDiv = document.getElementById("output");
-  outputDiv.innerHTML = output.join("<br>");
 }
-
-function showFileContent(filename) {
-  console.log("showFIleCOntent");
+function updateOutput(updatedLines) {
   const outputDiv = document.getElementById("output");
-  let output = sampleInput.split("\n");
+  outputDiv.innerHTML = updatedLines.join("<br>");
+}
+function showFileContent(filename) {
+  const outputDiv = document.getElementById("output");
+  const output = sampleInput.split("\n");
   const filenameDefined = document.getElementById("filename").innerHTML;
   if (filename == filenameDefined) {
-    console.log("same filename");
-    outputDiv.innerHTML = "test";
     outputDiv.innerHTML = output.join("<br>");
-    console.log("output");
   } else {
     outputDiv.innerHTML = "";
-    console.log("not the same");
+  }
+  console.log("reutnr output", output);
+  return output;
+}
+const output = null;
+function simulateBlock(block, lines) {
+  if (block != null) {
+    switch (block.type) {
+      case "command_cat":
+        {
+          console.log("command_cat");
+          const filename = block.getFieldValue("FILENAME");
+          return showFileContent(filename);
+        }
+        break;
+
+      case "command_pipe": {
+        console.log("command_pipe");
+        const leftBlock = block.getInputTargetBlock("COMMAND2");
+        const rightBlock = block.getInputTargetBlock("COMMAND1");
+
+        if (leftBlock && rightBlock) {
+          pipe(leftBlock, rightBlock, lines);
+        }
+        return lines;
+      }
+
+      case "filter_grep": {
+        console.log("filter_grep");
+        const inBlock = block.getInputTargetBlock("COMMAND_IN");
+        // const inLines = simulateBlock(inBlock, lines);
+        console.log("lines = ", lines);
+        const pattern = block.getFieldValue("PATTERN");
+        const option = block.getFieldValue("OPTION") || "";
+        let flags = option.includes("-i") ? "i" : "";
+        const regex = new RegExp(pattern, flags);
+
+        // -v invert?
+        if (option.includes("-v")) {
+          if (lines != null) {
+            console.log("there is something before");
+            console.log(lines.filter((l) => !regex.test(l)));
+            return lines.filter((l) => !regex.test(l));
+          } else {
+            console.log("lines est null");
+          }
+        }
+        // normal match + highlight
+        if (lines != null) {
+          return lines
+            .filter((l) => regex.test(l))
+            .map((l) =>
+              l.replace(regex, (m) => `<span class="highlight">${m}</span>`)
+            );
+        }
+      }
+
+      default:
+        return lines;
+    }
   }
 }
 
-function simulateBlock(block, lines) {
-  console.log("simulate block");
-  switch (block.type) {
-    // it keeps checking so it crashes
-    case "command_cat":
-      console.log("command_cat");
-      const filename = block.getFieldValue("FILENAME");
-      showFileContent(filename);
-      const nextBlock = block.getInputTargetBlock("COMMAND1");
-      if (nextBlock) {
-        return simulateBlock(nextBlock, lines);
-      }
-
-    // case "filter_grep": {
-    //   console.log("filter_grep");
-    //   const pattern = block.getFieldValue("PATTERN");
-    //   const option = block.getFieldValue("OPTION");
-
-    //   // voir pour mieux gérer les options et les combiner
-    //   let regexFlags = "";
-    //   const regex = new RegExp(pattern, regexFlags);
-    //   if (option != null) {
-    //     if (option.includes("-i")) {
-    //       regexFlags += "i";
-    //     }
-
-    //     if (option.includes("-v")) {
-    //       return lines.filter((line) => !regex.test(line));
-    //     }
-    //   } else {
-    //     return lines
-    //       .filter((line) => regex.test(line))
-    //       .map((line) => {
-    //         return line.replace(
-    //           regex,
-    //           (match) => `<span class="highlight">${match}</span>`
-    //         );
-    //       });
-    //   }
-    // }
-    // case "command_pipe": {
-    //   console.log("command_pipe");
-    //   const nextBlock = block.getInputTargetBlock("COMMAND1");
-    //   if (nextBlock) {
-    //     return simulateBlock(nextBlock, lines);
-    //   }
-    //   return lines;
-    // }
-
-    default:
-      return lines;
-  }
+function pipe(blockBefore, blockAfter, lines) {
+  console.log("simulate the first");
+  const linesFromFirstBlock = simulateBlock(blockBefore, lines);
+  console.log(
+    "now we do the simulate 2 with lines from cat",
+    linesFromFirstBlock
+  );
+  const finalLines = simulateBlock(blockAfter, linesFromFirstBlock);
+  updateOutput(finalLines);
 }
 
 // Load the initial state from storage and run the code.
