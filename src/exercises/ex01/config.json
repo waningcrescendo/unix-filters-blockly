@@ -1,0 +1,9 @@
+{
+    "title": "Loop sum",
+    "toolbox": ["controls_if","controls_repeat"],
+    "startXml": "<xml>…</xml>",
+    "tests": [
+      { "input": [1,2,3], "expected": 6 },
+      { "input": [4,5],   "expected": 9 }
+    ]
+  }
