@@ -48,7 +48,11 @@ function updateFilteredOutput() {
 }
 function updateOutput(updatedLines) {
   const outputDiv = document.getElementById("output");
-  outputDiv.innerHTML = updatedLines.join("<br>");
+  if (updatedLines != null) {
+    outputDiv.innerHTML = updatedLines.join("<br>");
+  } else {
+    outputDiv.innerHTML = "";
+  }
 }
 function showFileContent(filename) {
   const outputDiv = document.getElementById("output");
@@ -56,11 +60,11 @@ function showFileContent(filename) {
   const filenameDefined = document.getElementById("filename").innerHTML;
   if (filename == filenameDefined) {
     outputDiv.innerHTML = output.join("<br>");
+    return output;
   } else {
     outputDiv.innerHTML = "";
+    return null;
   }
-  console.log("reutnr output", output);
-  return output;
 }
 const output = null;
 function simulateBlock(block, lines) {
