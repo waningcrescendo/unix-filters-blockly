@@ -13,19 +13,27 @@ listed here.
 */
 
 export const toolbox = {
-  'kind': 'flyoutToolbox',
-  'contents': [
+  kind: "flyoutToolbox",
+  contents: [
     {
-      'kind': 'block',
-      'type': 'filter_grep'
+      kind: "block",
+      type: "command_pipe2",
     },
     {
-      'kind': 'block',
-      'type': 'command_cat'
+      kind: "block",
+      type: "command_cat2",
     },
     {
-      'kind': 'block',
-      'type': 'command_pipe'
-    }
-  ]
-}
+      kind: "block",
+      type: "filter_grep2",
+    },
+    {
+      kind: "block",
+      type: "option_v",
+    },
+    {
+      kind: "block",
+      type: "option_i",
+    },
+  ],
+};

@@ -70,70 +70,49 @@ const output = null;
 function simulateBlock(block, lines) {
   if (block != null) {
     switch (block.type) {
-      case "command_cat":
-        {
-          console.log("command_cat");
-          const filename = block.getFieldValue("FILENAME");
-          return showFileContent(filename);
-        }
-        break;
-
-      case "command_pipe": {
-        console.log("command_pipe");
-        const leftBlock = block.getInputTargetBlock("COMMAND2");
-        const rightBlock = block.getInputTargetBlock("COMMAND1");
-
-        if (leftBlock && rightBlock) {
-          pipe(leftBlock, rightBlock, lines);
-        }
-        return lines;
+      case "command_cat2": {
+        console.log("command_cat2");
+        const filename = block.getFieldValue("FILENAME");
+        const result = showFileContent(filename);
+        const next = block.getNextBlock();
+        return next ? simulateBlock(next, result) : result;
       }
 
-      case "filter_grep": {
+      case "command_pipe2":
+
+      case "filter_grep2": {
         console.log("filter_grep");
-        const inBlock = block.getInputTargetBlock("COMMAND_IN");
-        // const inLines = simulateBlock(inBlock, lines);
-        console.log("lines = ", lines);
         const pattern = block.getFieldValue("PATTERN");
-        const option = block.getFieldValue("OPTION") || "";
-        let flags = option.includes("-i") ? "i" : "";
+        const opts = [];
+        for (let i = 0; i < block.optionCount_; i++) {
+          const optBlock = block.getInputTargetBlock("OPTIONS_SLOT" + i);
+          if (!optBlock) continue;
+          if (optBlock.type === "option_i") opts.push("i");
+          if (optBlock.type === "option_v") opts.push("v");
+        }
+
+        const flags = opts.includes("i") ? "i" : "";
         const regex = new RegExp(pattern, flags);
 
-        // -v invert?
-        if (option.includes("-v")) {
-          if (lines != null) {
-            console.log("there is something before");
-            console.log(lines.filter((l) => !regex.test(l)));
-            return lines.filter((l) => !regex.test(l));
-          } else {
-            console.log("lines est null");
-          }
-        }
-        // normal match + highlight
-        if (lines != null) {
-          return lines
-            .filter((l) => regex.test(l))
-            .map((l) =>
-              l.replace(regex, (m) => `<span class="highlight">${m}</span>`)
+        let result = lines || [];
+        if (opts.includes("v")) {
+          result = result.filter((line) => !regex.test(line));
+        } else {
+          result = result
+            .filter((line) => regex.test(line))
+            .map((line) =>
+              line.replace(regex, (m) => `<span class="highlight">${m}</span>`)
             );
         }
+
+        const next = block.getNextBlock();
+        return next ? simulateBlock(next, result) : result;
       }
 
       default:
         return lines;
     }
   }
-}
-
-function pipe(blockBefore, blockAfter, lines) {
-  console.log("simulate the first");
-  const linesFromFirstBlock = simulateBlock(blockBefore, lines);
-  console.log(
-    "now we do the simulate 2 with lines from cat",
-    linesFromFirstBlock
-  );
-  const finalLines = simulateBlock(blockAfter, linesFromFirstBlock);
-  updateOutput(finalLines);
 }
 
 // Load the initial state from storage and run the code.

@@ -5,40 +5,44 @@ export const jsonGenerator = new Blockly.Generator("JSON");
 jsonGenerator.ORDER_ATOMIC = 0;
 jsonGenerator.ORDER_NONE = 0;
 
-jsonGenerator.forBlock["filter_grep"] = function (block) {
-  const pattern = block.getFieldValue("PATTERN");
-  const option = block.getFieldValue("OPTION");
-  const code = `grep ${option} "${pattern}"`;
-  return [code, jsonGenerator.ORDER_NONE];
-};
-
-jsonGenerator.forBlock["command_cat"] = function (block) {
+// test avec les séquentiels
+jsonGenerator.forBlock["command_cat2"] = function (block) {
   const filename = block.getFieldValue("FILENAME");
-  const command1 = jsonGenerator.valueToCode(
-    block,
-    "COMMAND1",
-    jsonGenerator.ORDER_NONE
-  );
-  const code = command1 ? `cat ${filename} | ${command1}` : `cat ${filename}`;
-  return [code, jsonGenerator.ORDER_NONE];
+  return `cat ${filename}`;
 };
 
-jsonGenerator.forBlock["command_pipe"] = function (block) {
-  // in a nested COMMAND1:
-  const cmd = jsonGenerator.valueToCode(
-    block,
-    "COMMAND1",
-    jsonGenerator.ORDER_NONE
-  );
-  const code = `${cmd}`;
-  return [code, jsonGenerator.ORDER_NONE];
+jsonGenerator.forBlock["filter_grep2"] = function (block) {
+  const pattern = block.getFieldValue("PATTERN");
+  const opts = [];
+  for (let i = 0; i < block.optionCount_; i++) {
+    const opt = block.getInputTargetBlock("OPTIONS_SLOT" + i);
+    if (!opt) continue;
+    if (opt.type === "option_i") opts.push("-i");
+    if (opt.type === "option_v") opts.push("-v");
+  }
+  const optionString = opts.join(" ");
+  return `grep ${optionString} "${pattern}"`;
+};
+
+jsonGenerator.forBlock["command_pipe2"] = function (block) {
+  return `|`;
+};
+
+jsonGenerator.forBlock["option_i"] = function (block) {
+  return `-i`;
+};
+jsonGenerator.forBlock["option_v"] = function (block) {
+  return `-v`;
 };
 
 jsonGenerator.scrub_ = function (block, code, thisOnly) {
-  const next = block.nextConnection && block.nextConnection.targetBlock();
-  if (next && !thisOnly) {
-    const nextCodeTuple = jsonGenerator.blockToCode(next);
-    return code + ",\n" + nextCodeTuple[0];
+  if (thisOnly) {
+    return code;
+  }
+  const nextBlock = block.nextConnection && block.nextConnection.targetBlock();
+  if (nextBlock) {
+    const nextCode = this.blockToCode(nextBlock, false);
+    return code + " " + nextCode;
   }
   return code;
 };
