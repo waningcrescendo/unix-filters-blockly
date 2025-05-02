@@ -25,35 +25,32 @@ kiwi
 `.trim();
 
 // Set up UI elements and inject Blockly
-const codeDiv = document.getElementById("generatedCode").firstChild;
 const blocklyDiv = document.getElementById("blocklyDiv");
 const ws = Blockly.inject(blocklyDiv, { toolbox });
 
-// This function resets the code div and shows the
-// generated code from the workspace.
-const runCode = () => {
-  const code = jsonGenerator.workspaceToCode(ws);
-  codeDiv.innerText = code;
+load(ws);
 
-  updateFilteredOutput();
-};
-
-function updateFilteredOutput() {
-  const blocks = ws.getTopBlocks(true);
-  let output = sampleInput.split("\n");
-
-  blocks.forEach((block) => {
-    output = simulateBlock(block, output);
-  });
+let programBlock = ws.getBlocksByType("program", false)[0];
+if (!programBlock) {
+  programBlock = ws.newBlock("program");
+  programBlock.initSvg();
+  programBlock.render();
+  programBlock.moveBy(20, 20);
 }
-function updateOutput(updatedLines) {
-  const outputDiv = document.getElementById("output");
-  if (updatedLines != null) {
-    outputDiv.innerHTML = updatedLines.join("<br>");
-  } else {
-    outputDiv.innerHTML = "";
-  }
+programBlock.setMovable(false);
+programBlock.setDeletable(false);
+programBlock.setEditable(false);
+programBlock.contextMenu = false;
+
+const logDiv = document.getElementById("executionLog");
+function clearLog() {
+  logDiv.innerHTML = "";
 }
+function appendLog(html) {
+  logDiv.insertAdjacentHTML("beforeend", html);
+  logDiv.scrollTop = logDiv.scrollHeight;
+}
+
 function showFileContent(filename) {
   const outputDiv = document.getElementById("output");
   const output = sampleInput.split("\n");
@@ -115,10 +112,6 @@ function simulateBlock(block, lines) {
   }
 }
 
-// Load the initial state from storage and run the code.
-load(ws);
-runCode();
-
 // Every time the workspace changes state, save the changes to storage.
 ws.addChangeListener((e) => {
   // UI events are things like scrolling, zooming, etc.
@@ -127,17 +120,33 @@ ws.addChangeListener((e) => {
   save(ws);
 });
 
-// Whenever the workspace changes meaningfully, run the code again.
-ws.addChangeListener((e) => {
-  // Don't run the code when the workspace finishes loading; we're
-  // already running it once when the application starts.
-  // Don't run the code during drags; we might have invalid state.
-  if (
-    e.isUiEvent ||
-    e.type == Blockly.Events.FINISHED_LOADING ||
-    ws.isDragging()
-  ) {
-    return;
+async function runProgram(rootBlock) {
+  console.log("run program");
+  clearLog();
+
+  let current = rootBlock.getNextBlock();
+  console.log("current : ", rootBlock.getNextBlock());
+  let lastResult = null;
+
+  while (current) {
+    console.log("while current");
+    const snippet = jsonGenerator.blockToCode(current, false);
+    const codeStr = Array.isArray(snippet) ? snippet[0] : snippet;
+
+    lastResult = simulateBlock(current, lastResult);
+
+    appendLog(`
+      <div style="margin-bottom:8px;">
+        <strong>${current.type}</strong>: 
+        <code>${codeStr}</code>
+        &rarr; <em>${String(lastResult)}</em>
+      </div>
+    `);
+    current = current.getNextBlock();
   }
-  runCode();
-});
+  console.log("nothing");
+}
+
+document
+  .getElementById("runButton")
+  .addEventListener("click", () => runProgram(programBlock));

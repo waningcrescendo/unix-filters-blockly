@@ -35,14 +35,26 @@ jsonGenerator.forBlock["option_v"] = function (block) {
   return `-v`;
 };
 
-jsonGenerator.scrub_ = function (block, code, thisOnly) {
-  if (thisOnly) {
-    return code;
-  }
-  const nextBlock = block.nextConnection && block.nextConnection.targetBlock();
-  if (nextBlock) {
-    const nextCode = this.blockToCode(nextBlock, false);
-    return code + " " + nextCode;
+jsonGenerator.forBlock["program"] = function (block) {
+  let code = "";
+  let child = block.getNextBlock();
+  while (child) {
+    const snippet = jsonGenerator.blockToCode(child, false);
+    code += Array.isArray(snippet) ? snippet[0] : snippet;
+    code += " ";
+    child = child.getNextBlock();
   }
   return code;
 };
+
+// jsonGenerator.scrub_ = function (block, code, thisOnly) {
+//   if (thisOnly) {
+//     return code;
+//   }
+//   const nextBlock = block.nextConnection && block.nextConnection.targetBlock();
+//   if (nextBlock) {
+//     const nextCode = this.blockToCode(nextBlock, false);
+//     return code + " " + nextCode;
+//   }
+//   return code;
+// };

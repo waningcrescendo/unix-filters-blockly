@@ -2,12 +2,26 @@ import * as Blockly from "blockly";
 
 export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
   {
+    type: "program",
+    tooltip: "",
+    helpUrl: "",
+    message0: "Programme %1",
+    args0: [
+      {
+        type: "input_dummy",
+        name: "NAME",
+      },
+    ],
+    nextStatement: null,
+    colour: 130,
+  },
+  {
     type: "command_pipe2",
     helpUrl: "https://fr.wikipedia.org/wiki/Tube_(shell)",
     message0: "|",
     previousStatement: null,
     nextStatement: null,
-    colour: 225,
+    colour: 200,
   },
   {
     type: "command_cat2",
@@ -33,7 +47,7 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 285,
+    colour: 250,
   },
   {
     type: "filter_grep2",
