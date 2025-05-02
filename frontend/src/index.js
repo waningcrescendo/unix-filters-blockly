@@ -82,13 +82,6 @@ async function runProgram(rootBlock) {
       lastResult = simulateBlock(current, lastResult);
     }
     console.log("last result", lastResult);
-    appendLog(`
-      <div style="margin-bottom:8px;">
-        <strong>${current.type}</strong>: 
-        <code>${codeStr}</code>
-        &rarr; <em>${String(lastResult)}</em>
-      </div>
-    `);
     current = current.getNextBlock();
     current != null
       ? console.log("next block", current.type)
@@ -96,6 +89,12 @@ async function runProgram(rootBlock) {
   }
   const outputDiv = document.getElementById("output");
   outputDiv.innerHTML = lastResult ? lastResult.join("<br>") : "";
+  const generatedCode = jsonGenerator.blockToCode(programBlock, false);
+  document.getElementById("generatedCode").textContent = Array.isArray(
+    generatedCode
+  )
+    ? generatedCode[0]
+    : generatedCode;
 }
 
 document
