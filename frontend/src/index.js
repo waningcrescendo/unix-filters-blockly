@@ -82,6 +82,13 @@ async function runProgram(rootBlock) {
       lastResult = simulateBlock(current, lastResult);
     }
     console.log("last result", lastResult);
+    appendLog(`
+      <div style="margin-bottom:8px;">
+        <strong>${current.type}</strong>: 
+        <code>${codeStr}</code>
+        &rarr; <em>${String(lastResult)}</em>
+      </div>
+    `);
     current = current.getNextBlock();
     current != null
       ? console.log("next block", current.type)
