@@ -17,15 +17,15 @@ export const toolbox = {
   contents: [
     {
       kind: "block",
-      type: "command_pipe2",
+      type: "command_pipe",
     },
     {
       kind: "block",
-      type: "command_cat2",
+      type: "command_cat",
     },
     {
       kind: "block",
-      type: "filter_grep2",
+      type: "command_grep",
     },
     {
       kind: "block",

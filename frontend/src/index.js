@@ -77,7 +77,7 @@ async function runProgram(rootBlock) {
 
     if (
       lastResult != null ||
-      (prevType === "program" && current.type !== "command_pipe2")
+      (prevType === "program" && current.type !== "command_pipe")
     ) {
       lastResult = simulateBlock(current, lastResult);
     }

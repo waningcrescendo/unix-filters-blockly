@@ -2,12 +2,12 @@ import { showFileContent } from "./utils";
 
 export function createHandlers(simulateBlock) {
   return {
-    command_cat2: (block, _) => {
+    command_cat: (block, _) => {
       const filename = block.getFieldValue("FILENAME");
       return showFileContent(filename);
     },
 
-    command_pipe2: (block, lines) => {
+    command_pipe: (block, lines) => {
       const precedentResult = simulateBlock(block.getPreviousBlock(), lines);
       console.log("precedent result ,", precedentResult);
       const nextBlock = block.getNextBlock();
@@ -19,10 +19,10 @@ export function createHandlers(simulateBlock) {
       return result;
     },
 
-    filter_grep2: (block, lines) => {
+    command_grep: (block, lines) => {
       console.log("filter_grep");
       const previous = block.getPreviousBlock();
-      if (!previous || previous.type !== "command_pipe2") {
+      if (!previous || previous.type !== "command_pipe") {
         console.log("grep must follow pipe");
         return null;
       }

@@ -16,7 +16,7 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     colour: 130,
   },
   {
-    type: "command_pipe2",
+    type: "command_pipe",
     helpUrl: "https://fr.wikipedia.org/wiki/Tube_(shell)",
     message0: "|",
     previousStatement: null,
@@ -24,7 +24,7 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     colour: 200,
   },
   {
-    type: "command_cat2",
+    type: "command_cat",
     tooltip: "",
     helpUrl: "https://fr.wikipedia.org/wiki/Cat_(Unix)",
     message0: "%1 %2 %3",
@@ -50,7 +50,7 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     colour: 250,
   },
   {
-    type: "filter_grep2",
+    type: "command_grep",
     message0: "grep %1",
     args0: [
       {

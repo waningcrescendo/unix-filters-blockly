@@ -6,12 +6,12 @@ jsonGenerator.ORDER_ATOMIC = 0;
 jsonGenerator.ORDER_NONE = 0;
 
 // test avec les séquentiels
-jsonGenerator.forBlock["command_cat2"] = function (block) {
+jsonGenerator.forBlock["command_cat"] = function (block) {
   const filename = block.getFieldValue("FILENAME");
   return `cat ${filename}`;
 };
 
-jsonGenerator.forBlock["filter_grep2"] = function (block) {
+jsonGenerator.forBlock["command_grep"] = function (block) {
   const pattern = block.getFieldValue("PATTERN");
   const opts = [];
   for (let i = 0; i < block.optionCount_; i++) {
@@ -24,7 +24,7 @@ jsonGenerator.forBlock["filter_grep2"] = function (block) {
   return `grep ${optionString} "${pattern}"`;
 };
 
-jsonGenerator.forBlock["command_pipe2"] = function (block) {
+jsonGenerator.forBlock["command_pipe"] = function (block) {
   return `|`;
 };
 
