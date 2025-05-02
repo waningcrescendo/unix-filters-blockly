@@ -142,6 +142,9 @@ Blockly.constants.Grep.GREP_MUTATOR_MIXIN = {
     for (let i = 0; i < this.optionCount_; i++) {
       const optionBlock = workspace.newBlock("grep_mutator_option");
       optionBlock.initSvg();
+      optionBlock.valueConnection_ = this.getInput(
+        "OPTIONS_SLOT" + i
+      ).connection.targetConnection;
       connection.connect(optionBlock.previousConnection);
       connection = optionBlock.nextConnection;
     }
@@ -158,6 +161,11 @@ Blockly.constants.Grep.GREP_MUTATOR_MIXIN = {
     }
     this.optionCount_ = connections.length;
     this.updateShape_();
+    for (let i = 0; i < connections.length; i++) {
+      if (connections[i]) {
+        this.getInput("OPTIONS_SLOT" + i).connection.connect(connections[i]);
+      }
+    }
   },
   updateShape_: function () {
     if (this.getInput("OPTIONS_SLOT0")) {
