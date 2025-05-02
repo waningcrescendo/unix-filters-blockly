@@ -52,18 +52,15 @@ function appendLog(html) {
 }
 
 function showFileContent(filename) {
-  const outputDiv = document.getElementById("output");
   const output = sampleInput.split("\n");
   const filenameDefined = document.getElementById("filename").innerHTML;
-  if (filename == filenameDefined) {
-    outputDiv.innerHTML = output.join("<br>");
+  if (filename === filenameDefined) {
     return output;
   } else {
-    outputDiv.innerHTML = "";
     return null;
   }
 }
-const output = null;
+
 function simulateBlock(block, lines) {
   if (block != null) {
     switch (block.type) {
@@ -71,14 +68,27 @@ function simulateBlock(block, lines) {
         console.log("command_cat2");
         const filename = block.getFieldValue("FILENAME");
         const result = showFileContent(filename);
-        const next = block.getNextBlock();
-        return next ? simulateBlock(next, result) : result;
+        return result;
       }
 
       case "command_pipe2":
+        const precedentResult = simulateBlock(block.getPreviousBlock(), lines);
+        console.log("precedent result ,", precedentResult);
+        const nextBlock = block.getNextBlock();
+        const result =
+          nextBlock != null && precedentResult != null
+            ? simulateBlock(nextBlock, precedentResult)
+            : null;
+        console.log("result pipe ", result);
+        return result;
 
       case "filter_grep2": {
         console.log("filter_grep");
+        const previous = block.getPreviousBlock();
+        if (!previous || previous.type !== "command_pipe2") {
+          console.warn("grep must follow a pipe");
+          return null;
+        }
         const pattern = block.getFieldValue("PATTERN");
         const opts = [];
         for (let i = 0; i < block.optionCount_; i++) {
@@ -101,9 +111,7 @@ function simulateBlock(block, lines) {
               line.replace(regex, (m) => `<span class="highlight">${m}</span>`)
             );
         }
-
-        const next = block.getNextBlock();
-        return next ? simulateBlock(next, result) : result;
+        return result;
       }
 
       default:
@@ -129,12 +137,19 @@ async function runProgram(rootBlock) {
   let lastResult = null;
 
   while (current) {
-    console.log("while current");
+    console.log("while current", current.type);
     const snippet = jsonGenerator.blockToCode(current, false);
     const codeStr = Array.isArray(snippet) ? snippet[0] : snippet;
+    console.log("previous type", current.getPreviousBlock.type);
+    const prevType = current.getPreviousBlock()?.type;
 
-    lastResult = simulateBlock(current, lastResult);
-
+    if (
+      lastResult != null ||
+      (prevType === "program" && current.type !== "command_pipe2")
+    ) {
+      lastResult = simulateBlock(current, lastResult);
+    }
+    console.log("last result", lastResult);
     appendLog(`
       <div style="margin-bottom:8px;">
         <strong>${current.type}</strong>: 
@@ -143,8 +158,12 @@ async function runProgram(rootBlock) {
       </div>
     `);
     current = current.getNextBlock();
+    current != null
+      ? console.log("next block", current.type)
+      : console.log("next block is null");
   }
-  console.log("nothing");
+  const outputDiv = document.getElementById("output");
+  outputDiv.innerHTML = lastResult ? lastResult.join("<br>") : "";
 }
 
 document
