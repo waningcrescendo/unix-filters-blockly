@@ -9,25 +9,16 @@ import { blocks } from "./core/blocks/json";
 import { save, load } from "./core/serialization";
 import { toolbox } from "./core/toolbox";
 import { jsonGenerator } from "./core/generators/json";
+import { createHandlers } from "./core/handlers";
 import "./index.css";
 
 // Register the blocks and generator with Blockly
 Blockly.common.defineBlocks(blocks);
 
-const sampleInput = `
-pêche
-pomme
-poire
-abricot
-banane
-fraise
-kiwi
-`.trim();
-
 // Set up UI elements and inject Blockly
 const blocklyDiv = document.getElementById("blocklyDiv");
 const ws = Blockly.inject(blocklyDiv, { toolbox });
-
+const handlers = createHandlers((block, lines) => simulateBlock(block, lines));
 load(ws);
 
 let programBlock = ws.getBlocksByType("program", false)[0];
@@ -51,72 +42,13 @@ function appendLog(html) {
   logDiv.scrollTop = logDiv.scrollHeight;
 }
 
-function showFileContent(filename) {
-  const output = sampleInput.split("\n");
-  const filenameDefined = document.getElementById("filename").innerHTML;
-  if (filename === filenameDefined) {
-    return output;
-  } else {
-    return null;
-  }
-}
-
 function simulateBlock(block, lines) {
   if (block != null) {
-    switch (block.type) {
-      case "command_cat2": {
-        console.log("command_cat2");
-        const filename = block.getFieldValue("FILENAME");
-        const result = showFileContent(filename);
-        return result;
-      }
-
-      case "command_pipe2":
-        const precedentResult = simulateBlock(block.getPreviousBlock(), lines);
-        console.log("precedent result ,", precedentResult);
-        const nextBlock = block.getNextBlock();
-        const result =
-          nextBlock != null && precedentResult != null
-            ? simulateBlock(nextBlock, precedentResult)
-            : null;
-        console.log("result pipe ", result);
-        return result;
-
-      case "filter_grep2": {
-        console.log("filter_grep");
-        const previous = block.getPreviousBlock();
-        if (!previous || previous.type !== "command_pipe2") {
-          console.warn("grep must follow a pipe");
-          return null;
-        }
-        const pattern = block.getFieldValue("PATTERN");
-        const opts = [];
-        for (let i = 0; i < block.optionCount_; i++) {
-          const optBlock = block.getInputTargetBlock("OPTIONS_SLOT" + i);
-          if (!optBlock) continue;
-          if (optBlock.type === "option_i") opts.push("i");
-          if (optBlock.type === "option_v") opts.push("v");
-        }
-
-        const flags = opts.includes("i") ? "i" : "";
-        const regex = new RegExp(pattern, flags);
-
-        let result = lines || [];
-        if (opts.includes("v")) {
-          result = result.filter((line) => !regex.test(line));
-        } else {
-          result = result
-            .filter((line) => regex.test(line))
-            .map((line) =>
-              line.replace(regex, (m) => `<span class="highlight">${m}</span>`)
-            );
-        }
-        return result;
-      }
-
-      default:
-        return lines;
+    const handler = handlers[block.type];
+    if (!handler) {
+      return lines;
     }
+    return handler(block, lines);
   }
 }
 
