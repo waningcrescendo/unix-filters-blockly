@@ -60,6 +60,105 @@ ws.addChangeListener((e) => {
   save(ws);
 });
 
+function createMachine(stateMachineDefinition) {
+  const machine = {
+    value: stateMachineDefinition.initialState,
+    // currentState would be starte or read and event would be switch
+    transition(currentState, event) {
+      const currentStateDefinition = stateMachineDefinition[currentState];
+      // destinationTransition for start->read would be:
+      /* target: "read",
+         action() {
+           console.log("transition action for switch in 'start' state");
+         },
+       },*/
+      const destinationTransition = currentStateDefinition.transitions[event];
+      if (!destinationTransition) {
+        return;
+      }
+
+      const destinationState = destinationTransition.target;
+      const destinationStateDefinition =
+        stateMachineDefinition[destinationState];
+      destinationTransition.action();
+      currentStateDefinition.actions.onExit();
+      destinationStateDefinition.actions.onEnter();
+
+      machine.value = destinationState;
+      return machine.value;
+    },
+  };
+  return machine;
+}
+
+const machine = createMachine({
+  initialState: "start",
+  start: {
+    actions: {
+      onEnter() {
+        console.log("start: onEnter");
+      },
+      onExit() {
+        console.log("start: onExit");
+      },
+    },
+    transitions: {
+      switch: {
+        target: "read",
+        action() {
+          console.log("transition action for switch in 'start' state");
+        },
+      },
+    },
+  },
+  read: {
+    actions: {
+      onEnter() {
+        console.log("read: onEnter");
+      },
+      onExit() {
+        console.log("read: onExit");
+      },
+    },
+    transitions: {
+      switch: {
+        // will be filter but for now i want to test it out
+        target: "filter",
+        action() {
+          console.log("transition action for switch in 'read' state");
+        },
+      },
+    },
+  },
+  filter: {
+    actions: {
+      onEnter() {
+        console.log("filter: onEnter");
+      },
+      onExit() {
+        console.log("filter: onExit");
+      },
+    },
+    transitions: {
+      switch: {
+        target: "filter",
+        action() {
+          console.log("transition action for switch in 'filter' state");
+        },
+      },
+    },
+  },
+});
+
+let state = machine.value;
+console.log("current state: ", state);
+
+state = machine.transition(state, "switch");
+console.log("current state:", state);
+
+state = machine.transition(state, "switch");
+console.log("current state:", state);
+
 async function runProgram(rootBlock) {
   console.log("run program");
   clearLog();
