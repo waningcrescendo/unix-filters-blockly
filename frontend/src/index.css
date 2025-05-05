@@ -43,3 +43,7 @@ code {
   background-color: yellow;
   font-weight: bold;
 }
+
+#runButton{
+  background-color: rgb(131, 151, 125);
+}
