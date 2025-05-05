@@ -28,7 +28,7 @@ const config = {
     // This will output the same index page with the bundle we
     // created above added in a script tag.
     new HtmlWebpackPlugin({
-      template: 'src/index.html',
+      template: 'public/index.html',
     }),
   ],
 };
