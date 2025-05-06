@@ -1,5 +1,9 @@
 # Blockly Sample App
 
+## Clone 
+```bash
+git clone --recursive https://github.com/waningcrescendo/unix-filters-blockly.git
+```
 ## Purpose
 
 This app illustrates how to use Blockly together with common programming tools like node/npm, webpack, typescript, eslint, and others. You can use it as the starting point for your own application and modify it as much as you'd like. It contains basic infrastructure for running, building, testing, etc. that you can use even if you don't understand how to configure the related tool yet. When your needs outgrow the functionality provided here, you can replace the provided configuration or tool with your own.
