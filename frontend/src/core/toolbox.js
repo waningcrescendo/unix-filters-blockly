@@ -29,6 +29,10 @@ export const toolbox = {
     },
     {
       kind: "block",
+      type: "command_grep_filename",
+    },
+    {
+      kind: "block",
       type: "option_v",
     },
     {
