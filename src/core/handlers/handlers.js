@@ -1,4 +1,4 @@
-import { showFileContent } from "./utils";
+import { showFileContent } from "../utils/utils";
 
 export function createHandlers(simulateBlock) {
   return {

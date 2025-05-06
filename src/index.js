@@ -6,10 +6,10 @@
 
 import * as Blockly from "blockly";
 import { blocks } from "./core/blocks/json";
-import { save, load } from "./core/serialization";
-import { toolbox } from "./core/toolbox";
+import { save, load } from "./core/utils/serialization";
+import { toolbox } from "./core/utils/toolbox";
 import { jsonGenerator } from "./core/generators/json";
-import { createHandlers } from "./core/handlers";
+import { createHandlers } from "./core/handlers/handlers";
 import "./index.css";
 
 // Register the blocks and generator with Blockly
