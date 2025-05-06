@@ -11,9 +11,19 @@ import { toolbox } from "./core/utils/toolbox";
 import { jsonGenerator } from "./core/generators/json";
 import { createHandlers } from "./core/handlers/handlers";
 import "./index.css";
+import emulator from "./vendor/bash-emulator-wrapper";
 
 // Register the blocks and generator with Blockly
 Blockly.common.defineBlocks(blocks);
+
+function seedFileSystem() {
+  const raw = document.getElementById("inputFile").textContent;
+  emulator.state.fileSystem["/home/user/fruits.txt"] = {
+    type: "file",
+    modified: Date.now(),
+    content: raw,
+  };
+}
 
 // Set up UI elements and inject Blockly
 const blocklyDiv = document.getElementById("blocklyDiv");
@@ -63,6 +73,7 @@ ws.addChangeListener((e) => {
 async function runProgram(rootBlock) {
   console.log("run program");
   clearLog();
+  seedFileSystem();
 
   let current = rootBlock.getNextBlock();
   console.log("current : ", rootBlock.getNextBlock());
@@ -103,6 +114,17 @@ async function runProgram(rootBlock) {
   )
     ? generatedCode[0]
     : generatedCode;
+  const commandStr = Array.isArray(generatedCode)
+    ? generatedCode[0]
+    : generatedCode;
+
+  try {
+    const output = await emulator.run(commandStr);
+    console.log("résultat emulateur :", output);
+    document.getElementById("output").textContent = output;
+  } catch (err) {
+    console.error("Erreur émulateur :", err);
+  }
 }
 
 document
