@@ -24,6 +24,20 @@ jsonGenerator.forBlock["command_grep"] = function (block) {
   return `grep ${optionString} "${pattern}"`;
 };
 
+jsonGenerator.forBlock["command_grep_filename"] = function (block) {
+  const pattern = block.getFieldValue("PATTERN");
+  const opts = [];
+  for (let i = 0; i < block.optionCount_; i++) {
+    const opt = block.getInputTargetBlock("OPTIONS_SLOT" + i);
+    if (!opt) continue;
+    if (opt.type === "option_i") opts.push("-i");
+    if (opt.type === "option_v") opts.push("-v");
+  }
+  const optionString = opts.join(" ");
+  const filename = block.getFieldValue("FILENAME");
+  return `grep ${optionString} "${pattern}" ${filename}`;
+};
+
 jsonGenerator.forBlock["command_pipe"] = function (block) {
   return `|`;
 };

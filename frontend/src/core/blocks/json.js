@@ -51,12 +51,48 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
   },
   {
     type: "command_grep",
-    message0: "grep %1",
+    message0: 'grep "%1"',
     args0: [
       {
         type: "field_input",
         name: "PATTERN",
         text: "pattern",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    mutator: "grep_mutator",
+    colour: 285,
+    tooltip: "",
+  },
+  {
+    type: "option_v",
+    tooltip: "",
+    helpUrl: "",
+    message0: "-v %1",
+    args0: [
+      {
+        type: "input_dummy",
+        name: "OPTION_V",
+        align: "CENTRE",
+      },
+    ],
+    previousStatement: null,
+    colour: 225,
+  },
+  {
+    type: "command_grep_filename",
+    message0: 'grep "%1" %2',
+    args0: [
+      {
+        type: "field_input",
+        name: "PATTERN",
+        text: "pattern",
+      },
+      {
+        type: "field_input",
+        name: "FILENAME",
+        text: "filename",
       },
     ],
     previousStatement: null,
