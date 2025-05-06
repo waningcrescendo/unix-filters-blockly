@@ -1,0 +1,3 @@
+[submodule "src/vendor/bash-emulator"]
+	path = src/vendor/bash-emulator
+	url = https://github.com/waningcrescendo/bash-emulator.git
