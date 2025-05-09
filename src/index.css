@@ -1,11 +1,7 @@
 body {
   margin: 0;
   max-width: 100vw;
-}
-
-pre,
-code {
-  overflow: auto;
+  font-family: Arial, sans-serif; 
 }
 
 #pageContainer {
@@ -30,13 +26,14 @@ code {
   margin: 1rem;
 }
 
-#generatedCode {
-  height: 50%;
-  background-color: rgb(247, 240, 228);
-}
-
-#output {
-  height: 50%;
+#generatedCode, #output {
+  font-family: "Courier New", Courier, monospace; 
+  background-color: #1e1e1e; 
+  color: #dcdcdc; 
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  margin-bottom: 1rem;
 }
 
 .highlight {
@@ -44,6 +41,32 @@ code {
   font-weight: bold;
 }
 
-#runButton{
-  background-color: rgb(131, 151, 125);
+#runButton {
+  background-color: #839c7d; 
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#runButton:hover {
+  background-color: #708c67; 
+}
+
+#inputFile {
+  background-color: #f4f4f4; 
+  font-family: "Courier New", Courier, monospace; 
+  color: #333; 
+  padding: 1rem;
+  border-radius: 8px;
+  white-space: pre-wrap; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 1rem;
+}
+
+#error {
+  color: #d9534f; 
+  font-family: "Courier New", Courier, monospace; 
+  font-weight: bold;
 }

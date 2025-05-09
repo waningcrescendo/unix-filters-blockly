@@ -13,39 +13,58 @@ jsonGenerator.forBlock.command_cat = function (block) {
 
 jsonGenerator.forBlock.command_grep = function (block) {
   const pattern = block.getFieldValue('PATTERN')
-  const opts = []
-  for (let i = 0; i < block.optionCount_; i++) {
-    const opt = block.getInputTargetBlock('OPTIONS_SLOT' + i)
-    if (!opt) continue
-    if (opt.type === 'option_i') opts.push('-i')
-    if (opt.type === 'option_v') opts.push('-v')
-  }
+  const opts = extractGrepOptions(block)
   const optionString = opts.join(' ')
   return `grep ${optionString} "${pattern}"`
 }
 
 jsonGenerator.forBlock.command_grep_filename = function (block) {
   const pattern = block.getFieldValue('PATTERN')
-  const opts = []
-  for (let i = 0; i < block.optionCount_; i++) {
-    const opt = block.getInputTargetBlock('OPTIONS_SLOT' + i)
-    if (!opt) continue
-    if (opt.type === 'option_i') opts.push('-i')
-    if (opt.type === 'option_v') opts.push('-v')
-  }
-  const optionString = opts.join(' ')
   const filename = block.getFieldValue('FILENAME')
+  const opts = extractGrepOptions(block)
+  const optionString = opts.join(' ')
   return `grep ${optionString} "${pattern}" ${filename}`
 }
 
-jsonGenerator.forBlock.command_pipe = function (block) {
+function extractGrepOptions (block) {
+  const authorizedOptions = new Set(['option_i', 'option_v'])
+  const optionFlagsMap = {
+    option_i: '-i',
+    option_v: '-v'
+  }
+
+  const opts = []
+  let hasInvalid = false
+
+  for (let i = 0; i < block.optionCount_; i++) {
+    const opt = block.getInputTargetBlock('OPTIONS_SLOT' + i)
+    if (!opt) continue
+
+    if (authorizedOptions.has(opt.type)) {
+      opts.push(optionFlagsMap[opt.type])
+    } else {
+      opts.push(`[INVALID:${opt.type}]`)
+      hasInvalid = true
+    }
+  }
+
+  block.setWarningText(
+    hasInvalid
+      ? 'One or more options are not valid in this command'
+      : null
+  )
+
+  return opts
+}
+
+jsonGenerator.forBlock.command_pipe = function () {
   return '|'
 }
 
-jsonGenerator.forBlock.option_i = function (block) {
+jsonGenerator.forBlock.option_i = function () {
   return '-i'
 }
-jsonGenerator.forBlock.option_v = function (block) {
+jsonGenerator.forBlock.option_v = function () {
   return '-v'
 }
 
@@ -60,15 +79,3 @@ jsonGenerator.forBlock.program = function (block) {
   }
   return code
 }
-
-// jsonGenerator.scrub_ = function (block, code, thisOnly) {
-//   if (thisOnly) {
-//     return code;
-//   }
-//   const nextBlock = block.nextConnection && block.nextConnection.targetBlock();
-//   if (nextBlock) {
-//     const nextCode = this.blockToCode(nextBlock, false);
-//     return code + " " + nextCode;
-//   }
-//   return code;
-// };
