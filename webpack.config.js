@@ -8,8 +8,8 @@ const config = {
     // Compile the source files into a bundle.
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    clean: true,
-    publicPath: 'https://waningcrescendo.github.io/unix-filters-blockly/'
+    clean: true
+    // publicPath: 'https://waningcrescendo.github.io/unix-filters-blockly/'
   },
   // Enable webpack-dev-server to get hot refresh of the app.
   devServer: {
@@ -54,6 +54,9 @@ module.exports = (env, argv) => {
     // Ignore spurious warnings from source-map-loader
     // It can't find source maps for some Closure modules and that is expected
     config.ignoreWarnings = [/Failed to parse source map/]
+  } else {
+    config.output.path = path.resolve(__dirname, 'dist')
+    config.devtool = 'source-map'
   }
   return config
 }
