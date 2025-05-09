@@ -13,31 +13,31 @@ listed here.
 */
 
 export const toolbox = {
-  kind: "flyoutToolbox",
+  kind: 'flyoutToolbox',
   contents: [
     {
-      kind: "block",
-      type: "command_pipe",
+      kind: 'block',
+      type: 'command_pipe'
     },
     {
-      kind: "block",
-      type: "command_cat",
+      kind: 'block',
+      type: 'command_cat'
     },
     {
-      kind: "block",
-      type: "command_grep",
+      kind: 'block',
+      type: 'command_grep'
     },
     {
-      kind: "block",
-      type: "command_grep_filename",
+      kind: 'block',
+      type: 'command_grep_filename'
     },
     {
-      kind: "block",
-      type: "option_v",
+      kind: 'block',
+      type: 'option_v'
     },
     {
-      kind: "block",
-      type: "option_i",
-    },
-  ],
-};
+      kind: 'block',
+      type: 'option_i'
+    }
+  ]
+}
