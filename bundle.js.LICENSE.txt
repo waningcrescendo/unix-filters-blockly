@@ -1,0 +1,17 @@
+/*! http://mths.be/repeat v0.2.0 by @mathias */
+
+/*! http://mths.be/startswith v0.2.0 by @mathias */
+
+/*! https://mths.be/includes v0.2.0 by @mathias */
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/**
+ * @license
+ * Copyright 2023 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
