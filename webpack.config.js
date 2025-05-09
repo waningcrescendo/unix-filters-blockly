@@ -9,6 +9,7 @@ const config = {
     filename: "bundle.js",
     path: path.resolve(__dirname, "dist"),
     clean: true,
+    publicPath: "https://waningcrescendo.github.io/unix-filters-blockly/"
   },
   // Enable webpack-dev-server to get hot refresh of the app.
   devServer: {
