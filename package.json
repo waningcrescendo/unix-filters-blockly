@@ -4,10 +4,13 @@
   "description": "A sample app using Blockly",
   "main": "index.js",
   "private": true,
+  "homepage": "https://waningcrescendo.github.io/unix-filters-blockly/",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode production",
-    "start": "webpack serve --open --mode development"
+    "start": "webpack serve --open --mode development",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "keywords": [
     "blockly"
@@ -16,6 +19,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "css-loader": "^6.7.1",
+    "gh-pages": "^6.3.0",
     "html-webpack-plugin": "^5.5.0",
     "source-map-loader": "^4.0.1",
     "style-loader": "^3.3.1",
