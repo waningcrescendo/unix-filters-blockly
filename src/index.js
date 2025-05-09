@@ -11,18 +11,24 @@ import { toolbox } from "./core/utils/toolbox";
 import { jsonGenerator } from "./core/generators/json";
 import { createHandlers } from "./core/handlers/handlers";
 import "./index.css";
-import emulator from "./vendor/bash-emulator-wrapper";
+import bashEmulator from "bash-emulator";
 
 // Register the blocks and generator with Blockly
 Blockly.common.defineBlocks(blocks);
 
-function seedFileSystem() {
-  const raw = document.getElementById("inputFile").textContent;
-  emulator.state.fileSystem["/home/user/fruits.txt"] = {
-    type: "file",
-    modified: Date.now(),
-    content: raw,
-  };
+async function seedFileSystem() {
+  const raw = document.getElementById("inputFile").textContent.trim();
+
+  try {
+    // Ensure the working directory is correct before writing the file
+    await emulator.changeDir("/home/user");
+
+    // Write the file content to the file system
+    await emulator.write("/home/user/fruits.txt", raw);
+    console.log("File written successfully");
+  } catch (err) {
+    console.error("Error writing file:", err);
+  }
 }
 
 // Set up UI elements and inject Blockly
@@ -73,7 +79,7 @@ ws.addChangeListener((e) => {
 async function runProgram(rootBlock) {
   console.log("run program");
   clearLog();
-  seedFileSystem();
+  await seedFileSystem();
 
   let current = rootBlock.getNextBlock();
   console.log("current : ", rootBlock.getNextBlock());
@@ -121,11 +127,18 @@ async function runProgram(rootBlock) {
   try {
     const output = await emulator.run(commandStr);
     console.log("résultat emulateur :", output);
-    document.getElementById("output").textContent = output;
   } catch (err) {
     console.error("Erreur émulateur :", err);
   }
 }
+const emulator = bashEmulator({
+  user: "user",
+  workingDirectory: "/home/user",
+  fileSystem: {
+    "/home/user": { type: "dir", modified: Date.now() },
+  },
+  history: [],
+});
 
 document
   .getElementById("runButton")
