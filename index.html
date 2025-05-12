@@ -7,15 +7,7 @@
   <body>
 
     <div id="pageContainer">
-
       <div id="outputPane">
-
-        <h3>Code généré</h3>
-        <pre id="generatedCode"><code></code></pre>
-
-        <button id="runButton">Exécuter</button>
-        <div id="executionLog"></div>
-
         <h3 id="filename">fruits.txt</h3>
         <pre id="inputFile">
 pêche
@@ -26,10 +18,11 @@ banane
 fraise
 kiwi
   </pre>
-        <pre id="error"></pre>
-
-        <h3>résultat</h3>
-        <pre id="output"></pre>
+        <button id="runButton">Exécuter</button>
+        <h3>Code généré</h3>
+        <div id="terminalWindow">
+          <div id="terminal"></div>
+        </div>
       </div>
 
       <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>

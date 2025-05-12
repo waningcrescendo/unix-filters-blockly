@@ -33,7 +33,9 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
+    "@xterm/xterm": "^5.5.0",
     "bash-emulator": "github:waningcrescendo/bash-emulator",
-    "blockly": "^11.0.0"
+    "blockly": "^11.0.0",
+    "xterm": "^5.3.0"
   }
 }

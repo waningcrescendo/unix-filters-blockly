@@ -11,13 +11,18 @@ import { toolbox } from './core/utils/toolbox'
 import { jsonGenerator } from './core/generators/json'
 import './index.css'
 import bashEmulator from 'bash-emulator'
+import 'xterm/css/xterm.css'
+import { Terminal } from 'xterm'
+
+const term = new Terminal({
+  rows: 20,
+  cols: 80
+})
+term.open(document.getElementById('terminal'))
 
 // Register the blocks and generator with Blockly
 Blockly.common.defineBlocks(blocks)
 
-const outputDiv = document.getElementById('output')
-const div = document.getElementById('executionLog')
-const errorDiv = document.getElementById('error')
 // utils functions
 async function seedFileSystem (emulator) {
   const raw = document.getElementById('inputFile').textContent.trim()
@@ -30,11 +35,8 @@ async function seedFileSystem (emulator) {
   }
 }
 
-function clearDivs () {
-  console.log('clear div')
-  div.innerHTML = ''
-  outputDiv.innerHTML = ''
-  errorDiv.innerHTML = ''
+async function prepareTerminal () {
+  console.log('terminal clear')
 }
 // Set up UI elements and inject Blockly
 const blocklyDiv = document.getElementById('blocklyDiv')
@@ -63,8 +65,6 @@ ws.addChangeListener((e) => {
 
 async function runProgram (rootBlock) {
   console.log('run program')
-  clearDivs()
-
   // right now the state isn't saved because we don't need it
   // as it's blockly, but when using a typing interface we'll
   // need to create one emulator per exercise
@@ -76,11 +76,10 @@ async function runProgram (rootBlock) {
     },
     history: []
   })
-
+  await prepareTerminal()
   await seedFileSystem(emulator)
 
   let current = rootBlock.getNextBlock()
-
   while (current) {
     current = current.getNextBlock()
     current != null
@@ -88,22 +87,23 @@ async function runProgram (rootBlock) {
       : console.log('next block is null')
   }
   const generatedCode = jsonGenerator.blockToCode(programBlock, false)
-  document.getElementById('generatedCode').textContent = Array.isArray(
-    generatedCode
-  )
-    ? generatedCode[0]
-    : generatedCode
 
   const commandStr = Array.isArray(generatedCode)
     ? generatedCode[0]
     : generatedCode
 
+  term.write(`${commandStr}\r\n`)
+
   try {
     console.log('running ', commandStr)
     const output = await emulator.run(commandStr)
-    outputDiv.textContent = output
+    term.write(output.replace(/\n/g, '\r\n'))
+    term.write('\r\n$ ')
   } catch (err) {
-    errorDiv.innerHTML = err
+    term.write('\x1b[31m')
+    term.write(err.replace(/\n/g, '\r\n'))
+    term.write('\x1b[0m')
+    term.write('\r\n$ ')
     console.error('error émulateur :', err)
   }
 }
