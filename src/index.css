@@ -22,7 +22,6 @@ body {
   flex-direction: column;
   width: 400px;
   flex: 0 0 400px;
-  overflow: auto;
   margin: 1rem;
 }
 
@@ -71,21 +70,3 @@ body {
   font-weight: bold;
 }
 
-#terminalWindow {
-  border: 2px solid #444; 
-  border-radius: 8px;
-  background-color: #1e1e1e;
-  padding: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-#terminal {
-  height: 95%;
-  width: 100%;
-  font-family: 'Courier New', Courier, monospace;
-  color: #dcdcdc;
-  background-color: #000;
-  padding: 10px;
-  border-radius: 6px;
-  overflow-y: auto;
-}

@@ -26,7 +26,6 @@ Blockly.common.defineBlocks(blocks)
 // utils functions
 async function seedFileSystem (emulator) {
   const raw = document.getElementById('inputFile').textContent.trim()
-
   try {
     await emulator.write('/home/user/fruits.txt', raw)
     console.log('File written successfully')
@@ -37,10 +36,12 @@ async function seedFileSystem (emulator) {
 
 async function prepareTerminal () {
   console.log('terminal clear')
+  term.write('$ ')
+  term.reset()
 }
 // Set up UI elements and inject Blockly
 const blocklyDiv = document.getElementById('blocklyDiv')
-const ws = Blockly.inject(blocklyDiv, { toolbox })
+const ws = Blockly.inject(blocklyDiv, { toolbox, maxBlocks: 10 })
 load(ws)
 
 let programBlock = ws.getBlocksByType('program', false)[0]
