@@ -38,6 +38,14 @@ export const toolbox = {
     {
       kind: 'block',
       type: 'option_i'
+    },
+    {
+      kind: 'block',
+      type: 'option_n'
+    },
+    {
+      kind: 'block',
+      type: 'option_c'
     }
   ]
 }

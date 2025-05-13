@@ -15,7 +15,7 @@ jsonGenerator.forBlock.command_grep = function (block) {
   const pattern = block.getFieldValue('PATTERN')
   const opts = extractGrepOptions(block)
   const optionString = opts.join(' ')
-  return `grep ${optionString} "${pattern}"`
+  return `grep ${optionString} ${pattern}`
 }
 
 jsonGenerator.forBlock.command_grep_filename = function (block) {
@@ -23,14 +23,16 @@ jsonGenerator.forBlock.command_grep_filename = function (block) {
   const filename = block.getFieldValue('FILENAME')
   const opts = extractGrepOptions(block)
   const optionString = opts.join(' ')
-  return `grep ${optionString} "${pattern}" ${filename}`
+  return `grep ${optionString} ${pattern} ${filename}`
 }
 
 function extractGrepOptions (block) {
-  const authorizedOptions = new Set(['option_i', 'option_v'])
+  const authorizedOptions = new Set(['option_i', 'option_v', 'option_n', 'option_c'])
   const optionFlagsMap = {
     option_i: '-i',
-    option_v: '-v'
+    option_v: '-v',
+    option_n: '-n',
+    option_c: '-c'
   }
 
   const opts = []
@@ -66,6 +68,12 @@ jsonGenerator.forBlock.option_i = function () {
 }
 jsonGenerator.forBlock.option_v = function () {
   return '-v'
+}
+jsonGenerator.forBlock.option_n = function () {
+  return '-n'
+}
+jsonGenerator.forBlock.option_c = function () {
+  return '-c'
 }
 
 jsonGenerator.forBlock.program = function (block) {

@@ -51,7 +51,7 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
   },
   {
     type: 'command_grep',
-    message0: 'grep "%1"',
+    message0: 'grep %1',
     args0: [
       {
         type: 'field_input',
@@ -81,8 +81,38 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     colour: 225
   },
   {
+    type: 'option_n',
+    tooltip: '',
+    helpUrl: '',
+    message0: '-n %1',
+    args0: [
+      {
+        type: 'input_dummy',
+        name: 'OPTION_N',
+        align: 'CENTRE'
+      }
+    ],
+    previousStatement: null,
+    colour: 330
+  },
+  {
+    type: 'option_c',
+    tooltip: '',
+    helpUrl: '',
+    message0: '-c %1',
+    args0: [
+      {
+        type: 'input_dummy',
+        name: 'OPTION_C',
+        align: 'CENTRE'
+      }
+    ],
+    previousStatement: null,
+    colour: 60
+  },
+  {
     type: 'command_grep_filename',
-    message0: 'grep "%1" %2',
+    message0: 'grep %1 %2',
     args0: [
       {
         type: 'field_input',
