@@ -33,6 +33,10 @@ export const toolbox = {
     },
     {
       kind: 'block',
+      type: 'command_sort'
+    },
+    {
+      kind: 'block',
       type: 'option_v'
     },
     {
@@ -46,6 +50,18 @@ export const toolbox = {
     {
       kind: 'block',
       type: 'option_c'
+    },
+    {
+      kind: 'block',
+      type: 'option_k'
+    },
+    {
+      kind: 'block',
+      type: 'option_r'
+    },
+    {
+      kind: 'block',
+      type: 'option_u'
     }
   ]
 }

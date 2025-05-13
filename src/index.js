@@ -91,8 +91,8 @@ async function runProgram (rootBlock) {
   document.getElementById('generatedCode').textContent = Array.isArray(
     generatedCode
   )
-    ? generatedCode[0]
-    : generatedCode
+    ? '$ ' + generatedCode[0]
+    : '$ ' + generatedCode
 
   const commandStr = Array.isArray(generatedCode)
     ? generatedCode[0]
@@ -101,6 +101,7 @@ async function runProgram (rootBlock) {
   try {
     console.log('running ', commandStr)
     const output = await emulator.run(commandStr)
+    console.log('output emulateur ', output)
     outputDiv.textContent = output
   } catch (err) {
     errorDiv.innerHTML = err

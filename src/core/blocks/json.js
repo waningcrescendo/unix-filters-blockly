@@ -1,4 +1,6 @@
 import * as Blockly from 'blockly'
+import './grep_mutator.js'
+import './sort_mutator.js'
 
 export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
   {
@@ -66,51 +68,6 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     tooltip: ''
   },
   {
-    type: 'option_v',
-    tooltip: '',
-    helpUrl: '',
-    message0: '-v %1',
-    args0: [
-      {
-        type: 'input_dummy',
-        name: 'OPTION_V',
-        align: 'CENTRE'
-      }
-    ],
-    previousStatement: null,
-    colour: 225
-  },
-  {
-    type: 'option_n',
-    tooltip: '',
-    helpUrl: '',
-    message0: '-n %1',
-    args0: [
-      {
-        type: 'input_dummy',
-        name: 'OPTION_N',
-        align: 'CENTRE'
-      }
-    ],
-    previousStatement: null,
-    colour: 330
-  },
-  {
-    type: 'option_c',
-    tooltip: '',
-    helpUrl: '',
-    message0: '-c %1',
-    args0: [
-      {
-        type: 'input_dummy',
-        name: 'OPTION_C',
-        align: 'CENTRE'
-      }
-    ],
-    previousStatement: null,
-    colour: 60
-  },
-  {
     type: 'command_grep_filename',
     message0: 'grep %1 %2',
     args0: [
@@ -130,6 +87,22 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     mutator: 'grep_mutator',
     colour: 285,
     tooltip: ''
+  },
+  {
+    type: 'command_sort',
+    tooltip: '',
+    helpUrl: '',
+    message0: 'sort %1',
+    args0: [
+      {
+        type: 'input_dummy',
+        name: 'NAME'
+      }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    mutator: 'sort_mutator',
+    colour: 225
   },
   {
     type: 'option_v',
@@ -162,6 +135,119 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     colour: 15
   },
   {
+    type: 'option_n',
+    tooltip: '',
+    helpUrl: '',
+    message0: '-n %1',
+    args0: [
+      {
+        type: 'input_dummy',
+        name: 'OPTION_N',
+        align: 'CENTRE'
+      }
+    ],
+    previousStatement: null,
+    colour: 330
+  },
+  {
+    type: 'option_c',
+    tooltip: '',
+    helpUrl: '',
+    message0: '-c %1',
+    args0: [
+      {
+        type: 'input_dummy',
+        name: 'OPTION_C',
+        align: 'CENTRE'
+      }
+    ],
+    previousStatement: null,
+    colour: 60
+  },
+  {
+    type: 'option_v',
+    tooltip: '',
+    helpUrl: '',
+    message0: '-v %1',
+    args0: [
+      {
+        type: 'input_dummy',
+        name: 'OPTION_V',
+        align: 'CENTRE'
+      }
+    ],
+    previousStatement: null,
+    colour: 225
+  },
+  {
+    type: 'option_r',
+    tooltip: '',
+    helpUrl: '',
+    message0: '-r %1',
+    args0: [
+      {
+        type: 'input_dummy',
+        name: 'OPTION_R',
+        align: 'CENTRE'
+      }
+    ],
+    previousStatement: null,
+    colour: 225
+  },
+  {
+    type: 'option_u',
+    tooltip: '',
+    helpUrl: '',
+    message0: '-u %1',
+    args0: [
+      {
+        type: 'input_dummy',
+        name: 'OPTION_U',
+        align: 'CENTRE'
+      }
+    ],
+    previousStatement: null,
+    colour: 225
+  },
+  {
+    type: 'option_v',
+    tooltip: '',
+    helpUrl: '',
+    message0: '-v %1',
+    args0: [
+      {
+        type: 'input_dummy',
+        name: 'OPTION_V',
+        align: 'CENTRE'
+      }
+    ],
+    previousStatement: null,
+    colour: 225
+  },
+  {
+    type: 'option_k',
+    tooltip: '',
+    helpUrl: '',
+    message0: '-k %1 %2',
+    args0: [
+      {
+        type: 'field_number',
+        name: 'COLUMN_INDEX',
+        value: 1,
+        min: 1,
+        max: 100
+      },
+      {
+        type: 'input_dummy',
+        name: 'NAME'
+      }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 315
+  },
+
+  {
     type: 'grep_mutator_container',
     message0: 'Options grep %1 %2',
     args0: [
@@ -184,77 +270,29 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     colour: 285,
     tooltip: 'Une option (-v, -i,...)',
     enableContextMenu: false
+  },
+  {
+    type: 'sort_mutator_container',
+    message0: 'Options sort %1 %2',
+    args0: [
+      { type: 'input_dummy' },
+      {
+        type: 'input_statement',
+        name: 'OPTIONS',
+        check: 'sort_option'
+      }
+    ],
+    colour: 285,
+    tooltip: 'Ajouter/supprimer des options pour sort',
+    enableContextMenu: false
+  },
+  {
+    type: 'sort_mutator_option',
+    message0: 'option',
+    nextStatement: 'sort_option',
+    previousStatement: 'sort_option',
+    colour: 285,
+    tooltip: 'Une option (-v, -i,...)',
+    enableContextMenu: false
   }
 ])
-
-Blockly.constants.Grep = {}
-Blockly.constants.Grep.GREP_MUTATOR_MIXIN = {
-  optionCount_: 0,
-  mutationToDom: function () {
-    const container = document.createElement('mutation')
-    container.setAttribute('options', this.optionCount_)
-    return container
-  },
-  domToMutation: function (xmlElement) {
-    this.optionCount_ = parseInt(xmlElement.getAttribute('options'), 10)
-    this.updateShape_()
-  },
-
-  decompose: function (workspace) {
-    console.log()
-    const containerBlock = workspace.newBlock('grep_mutator_container')
-    containerBlock.initSvg()
-    let connection = containerBlock.getInput('OPTIONS').connection
-    for (let i = 0; i < this.optionCount_; i++) {
-      const optionBlock = workspace.newBlock('grep_mutator_option')
-      optionBlock.initSvg()
-      optionBlock.valueConnection_ = this.getInput(
-        'OPTIONS_SLOT' + i
-      ).connection.targetConnection
-      connection.connect(optionBlock.previousConnection)
-      connection = optionBlock.nextConnection
-    }
-    return containerBlock
-  },
-
-  compose: function (containerBlock) {
-    let optionBlock = containerBlock.getInputTargetBlock('OPTIONS')
-    const connections = []
-    while (optionBlock) {
-      connections.push(optionBlock.valueConnection_)
-      optionBlock =
-        optionBlock.nextConnection && optionBlock.nextConnection.targetBlock()
-    }
-    this.optionCount_ = connections.length
-    this.updateShape_()
-    for (let i = 0; i < connections.length; i++) {
-      if (connections[i]) {
-        this.getInput('OPTIONS_SLOT' + i).connection.connect(connections[i])
-      }
-    }
-  },
-  updateShape_: function () {
-    if (this.getInput('OPTIONS_SLOT0')) {
-      let i = 0
-      while (this.getInput('OPTIONS_SLOT' + i)) {
-        this.removeInput('OPTIONS_SLOT' + i)
-        i++
-      }
-    }
-    for (let i = 0; i < this.optionCount_; i++) {
-      this.appendStatementInput('OPTIONS_SLOT' + i)
-        .setCheck('grep_option')
-        .appendField('option')
-    }
-    if (this.getInput('PATTERN')) {
-      this.moveInputBefore('PATTERN', null)
-    }
-  }
-}
-
-Blockly.Extensions.registerMutator(
-  'grep_mutator',
-  Blockly.constants.Grep.GREP_MUTATOR_MIXIN,
-  null,
-  ['grep_mutator_option']
-)
