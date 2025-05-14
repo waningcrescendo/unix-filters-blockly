@@ -14,43 +14,43 @@ import bashEmulator from 'bash-emulator'
 import json from '../ex1.json'
 import { createApp } from 'vue'
 import App from './App.vue'
+
 // Register the blocks and generator with Blockly
 Blockly.common.defineBlocks(blocks)
 
-const app = createApp(App, { message: json.title, jsonContent: json })
-app.mount('#app')
-
-console.log('message', document.getElementById('message').innerText)
-console.log('jsoncontent', document.getElementById('jsonContent').innerText)
-console.log('app', document.getElementById('app').innerText)
-
+const maxBlocks = json.maxBlocks
+const jsonFileContent = json.fileContent
+const jsonFilename = json.filename
 const outputDiv = document.getElementById('output')
 const div = document.getElementById('executionLog')
 const errorDiv = document.getElementById('error')
+
+toolbox.contents = json.toolbox
+const app = createApp(App, { message: json.title, guideline: json.guideline, filename: jsonFilename, fileContent: jsonFileContent })
+app.mount('#app')
+
 // utils functions
 async function seedFileSystem (emulator) {
-  const raw = document.getElementById('fileContent').textContent.trim()
+  document.getElementById('fileContent').innerText = jsonFileContent
 
   try {
-    await emulator.write('/home/user/fruits.txt', raw)
+    await emulator.write(`/home/user/${jsonFilename}`, jsonFileContent)
     console.log('File written successfully')
   } catch (err) {
     console.error('Error writing file:', err)
   }
 }
-function getExercise () {
-  console.log('egetexercise', json)
-  // console.log(document.getElementById('jsonContent').innerHTML)
-}
+
 function clearDivs () {
-  console.log('clear div')
   div.innerHTML = ''
   outputDiv.innerHTML = ''
   errorDiv.innerHTML = ''
 }
+
 // Set up UI elements and inject Blockly
 const blocklyDiv = document.getElementById('blocklyDiv')
-const ws = Blockly.inject(blocklyDiv, { toolbox })
+// inject toolbox associated with exercise
+const ws = Blockly.inject(blocklyDiv, { toolbox, maxBlocks })
 load(ws)
 
 let programBlock = ws.getBlocksByType('program', false)[0]
@@ -74,9 +74,7 @@ ws.addChangeListener((e) => {
 })
 
 async function runProgram (rootBlock) {
-  console.log('run program')
   clearDivs()
-  getExercise()
 
   // right now the state isn't saved because we don't need it
   // as it's blockly, but when using a typing interface we'll
@@ -96,9 +94,6 @@ async function runProgram (rootBlock) {
 
   while (current) {
     current = current.getNextBlock()
-    current != null
-      ? console.log('next block', current.type)
-      : console.log('next block is null')
   }
   const generatedCode = jsonGenerator.blockToCode(programBlock, false)
   document.getElementById('generatedCode').textContent = Array.isArray(
@@ -115,9 +110,18 @@ async function runProgram (rootBlock) {
     console.log('running ', commandStr)
     const output = await emulator.run(commandStr)
     outputDiv.textContent = output
+    console.log('output', output)
+    console.log('expected result', json.expectedResult)
+
+    if (output == json.expectedResult) {
+      console.log('you passed!!!')
+    } else {
+      console.log('you failed...')
+    }
   } catch (err) {
     errorDiv.innerHTML = err
     console.error('error émulateur :', err)
+    console.log('you failed...')
   }
 }
 
