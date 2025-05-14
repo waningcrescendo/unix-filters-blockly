@@ -11,16 +11,25 @@ import { toolbox } from './core/utils/toolbox'
 import { jsonGenerator } from './core/generators/json'
 import './index.css'
 import bashEmulator from 'bash-emulator'
-
+import json from '../ex1.json'
+import { createApp } from 'vue'
+import App from './App.vue'
 // Register the blocks and generator with Blockly
 Blockly.common.defineBlocks(blocks)
+
+const app = createApp(App, { message: json.title, jsonContent: json })
+app.mount('#app')
+
+console.log('message', document.getElementById('message').innerText)
+console.log('jsoncontent', document.getElementById('jsonContent').innerText)
+console.log('app', document.getElementById('app').innerText)
 
 const outputDiv = document.getElementById('output')
 const div = document.getElementById('executionLog')
 const errorDiv = document.getElementById('error')
 // utils functions
 async function seedFileSystem (emulator) {
-  const raw = document.getElementById('inputFile').textContent.trim()
+  const raw = document.getElementById('fileContent').textContent.trim()
 
   try {
     await emulator.write('/home/user/fruits.txt', raw)
@@ -29,7 +38,10 @@ async function seedFileSystem (emulator) {
     console.error('Error writing file:', err)
   }
 }
-
+function getExercise () {
+  console.log('egetexercise', json)
+  // console.log(document.getElementById('jsonContent').innerHTML)
+}
 function clearDivs () {
   console.log('clear div')
   div.innerHTML = ''
@@ -64,6 +76,7 @@ ws.addChangeListener((e) => {
 async function runProgram (rootBlock) {
   console.log('run program')
   clearDivs()
+  getExercise()
 
   // right now the state isn't saved because we don't need it
   // as it's blockly, but when using a typing interface we'll

@@ -26,7 +26,7 @@ body {
   margin: 1rem;
 }
 
-#generatedCode, #output {
+#generatedCode, #output,#jsonContent {
   font-family: "Courier New", Courier, monospace; 
   background-color: #1e1e1e; 
   color: #dcdcdc; 
@@ -54,7 +54,7 @@ body {
   background-color: #708c67; 
 }
 
-#inputFile {
+#fileContent {
   background-color: #f4f4f4; 
   font-family: "Courier New", Courier, monospace; 
   color: #333; 

@@ -1,0 +1,9 @@
+{
+    "title": "Exercice 1",
+    "toolbox":["command_grep", "command_cat"],
+    "maxBlocks": 2,
+    "guideline": "Affiche le contenu du fichier 'fruits.txt'.",
+    "filename": "fruits.txt",
+    "fileContent": "pêche\npomme\npoire\nabricot\nbanane\nkiwi\nfraise",
+    "expectedResult": "pêche\npomme\npoire\nabricot\nbanane\nkiwi\nfraise"
+}

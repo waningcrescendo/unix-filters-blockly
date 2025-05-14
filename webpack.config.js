@@ -1,5 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { VueLoaderPlugin } = require('vue-loader')
 
 // Base config that applies to either development or production mode.
 const config = {
@@ -21,6 +22,9 @@ const config = {
         // Load CSS files. They can be imported into JS files.
         test: /\.css$/i,
         use: ['style-loader', 'css-loader']
+      }, {
+        test: /\.vue$/i,
+        use: ['vue-loader']
       }
     ]
   },
@@ -30,7 +34,8 @@ const config = {
     // created above added in a script tag.
     new HtmlWebpackPlugin({
       template: 'index.html'
-    })
+    }),
+    new VueLoaderPlugin()
   ]
 }
 
