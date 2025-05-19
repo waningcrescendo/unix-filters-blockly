@@ -1,8 +1,0 @@
-{
-    "title": "Affiche le contenu du fichier",
-    "toolbox": ["command_cat"],
-    "startXml": "<xml>…</xml>",
-    "tests": [
-      { "input": [1,2,3], "expected": 6 }
-        ]
-  }
