@@ -1,0 +1,10 @@
+alice 7200
+bob 4800
+claire 9100
+daniel 3150
+eve 6700
+frank 10000
+george 9999
+hannah 5500
+irene 4300
+jack 7800

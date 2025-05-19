@@ -87,8 +87,18 @@ export async function switchExercise (configPath, exerciseId, buttonElement) {
     try {
       const response = await fetch(configPath)
       if (!response.ok) throw new Error(`config missing : ${configPath}`)
-
       const data = await response.json()
+
+      const exerciseNumber = data.exerciseNumber
+      const filePathInputFile = `/exercises/ex0${exerciseNumber}/${data.filename}`
+      const fileResponse = await fetch(filePathInputFile)
+      if (!fileResponse.ok) throw new Error(`missing file: ${filePathInputFile}`)
+      const fileContent = await fileResponse.text()
+
+      const filePathExpectedResult = `/exercises/ex0${exerciseNumber}/${data.expectedResult}`
+      const fileResponseExpected = await fetch(filePathExpectedResult)
+      if (!fileResponseExpected.ok) throw new Error(`missing file: ${filePathExpectedResult}`)
+      const expectedFileContent = await fileResponseExpected.text()
 
       currentEmulator = bashEmulator({
         user: 'user',
@@ -100,7 +110,7 @@ export async function switchExercise (configPath, exerciseId, buttonElement) {
         history: []
       })
 
-      await seedFileSystem(currentEmulator, data.filename, data.fileContent)
+      await seedFileSystem(currentEmulator, data.filename, fileContent)
 
       if (workspace) {
         workspace.dispose()
@@ -119,10 +129,10 @@ export async function switchExercise (configPath, exerciseId, buttonElement) {
         title: data.title,
         guideline: data.guideline,
         filename: data.filename,
-        fileContent: data.fileContent,
         toolbox: data.toolbox,
         maxBlocks: data.maxBlocks,
-        expectedResult: data.expectedResult,
+        fileContent,
+        expectedResult: expectedFileContent,
         xml: Blockly.Xml.workspaceToDom(workspace),
         emulator: currentEmulator,
         emulatorState: null
@@ -131,7 +141,7 @@ export async function switchExercise (configPath, exerciseId, buttonElement) {
       document.getElementById('exerciseTitle').innerText = data.title || ''
       document.getElementById('exerciseGuideline').innerText = data.guideline || ''
       document.getElementById('filename').innerText = data.filename || ''
-      document.getElementById('inputFile').innerText = data.fileContent || ''
+      document.getElementById('inputFile').innerText = fileContent || ''
     } catch (err) {
       console.error('error loading exercise:', err)
     }

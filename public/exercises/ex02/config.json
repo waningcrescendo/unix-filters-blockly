@@ -1,5 +1,6 @@
 {
   "title": "Exercice 2",
+  "exerciseNumber": 2,
   "toolbox": [
     { "kind": "block", "type": "command_cat" },
     { "kind": "block", "type": "command_grep" },
@@ -7,6 +8,5 @@
   ],
   "guideline": "Affiche les mots commençant par la lettre 'p'.",
   "filename": "fruits.txt",
-  "fileContent": "pêche\npomme\npoire\nabricot\nbanane\nkiwi\nfraise",
-  "expectedResult": "pêche\npomme\npoire\n"
+  "expectedResult": "fruitsStartingWithP.txt"
 }
