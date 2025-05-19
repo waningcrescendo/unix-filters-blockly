@@ -31,10 +31,6 @@ jsonGenerator.forBlock.command_sort = function (block) {
   return `sort ${optionString}`
 }
 
-jsonGenerator.forBlock.command_pipe = function () {
-  return '|'
-}
-
 function extractOptions (block) {
   const optionsMap = {
     command_grep: ['option_v', 'option_i', 'option_n', 'option_c'],
@@ -80,10 +76,16 @@ function extractOptions (block) {
 jsonGenerator.forBlock.program = function (block) {
   let code = ''
   let child = block.getNextBlock()
+  let previousBlockWasCommandBlock = false
   while (child) {
     const snippet = jsonGenerator.blockToCode(child, false)
+    const currentBlockIsCommand = child.type.startsWith('command_')
+    if (previousBlockWasCommandBlock && currentBlockIsCommand) {
+      code += '| '
+    }
     code += Array.isArray(snippet) ? snippet[0] : snippet
     code += ' '
+    previousBlockWasCommandBlock = currentBlockIsCommand
     child = child.getNextBlock()
   }
   return code

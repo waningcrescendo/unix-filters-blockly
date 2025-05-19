@@ -17,10 +17,6 @@ export const toolbox = {
   contents: [
     {
       kind: 'block',
-      type: 'command_pipe'
-    },
-    {
-      kind: 'block',
       type: 'command_cat'
     },
     {

@@ -8,25 +8,8 @@ export function createHandlers (simulateBlock) {
       return showFileContent(filename)
     },
 
-    command_pipe: (block, lines) => {
-      const precedentResult = simulateBlock(block.getPreviousBlock(), lines)
-      console.log('precedent result ,', precedentResult)
-      const nextBlock = block.getNextBlock()
-      const result =
-        nextBlock != null && precedentResult != null
-          ? simulateBlock(nextBlock, precedentResult)
-          : null
-      console.log('result pipe ', result)
-      return result
-    },
-
     command_grep: (block, lines) => {
       console.log('filter_grep')
-      const previous = block.getPreviousBlock()
-      if (!previous || previous.type !== 'command_pipe') {
-        console.log('grep must follow pipe')
-        return null
-      }
       const pattern = block.getFieldValue('PATTERN')
       const opts = []
       for (let i = 0; i < block.optionCount_; i++) {

@@ -18,14 +18,6 @@ export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     colour: 130
   },
   {
-    type: 'command_pipe',
-    helpUrl: 'https://fr.wikipedia.org/wiki/Tube_(shell)',
-    message0: '|',
-    previousStatement: null,
-    nextStatement: null,
-    colour: 200
-  },
-  {
     type: 'command_cat',
     tooltip: '',
     helpUrl: 'https://fr.wikipedia.org/wiki/Cat_(Unix)',
