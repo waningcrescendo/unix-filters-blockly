@@ -7,32 +7,39 @@
   <body>
 
     <div id="pageContainer">
-
       <div id="outputPane">
+          <div id="exerciseTabs">
+            <button id="loadExo1" class="tab-button">Exercice 1</button>
+            <button id="loadExo2" class="tab-button">Exercice 2</button>
+            <button id="loadExo3" class="tab-button">Exercice 3</button>
+          </div>
+          <h3>Code généré</h3>
+          <pre id="generatedCode"><code></code></pre>
+          <h2 id="exerciseTitle"></h2>
+          <p id="exerciseGuideline"></p>
+          <button id="runButton">Exécuter</button>
+          <div id="executionLog"></div>
 
-        <h3>Code généré</h3>
-        <pre id="generatedCode"><code></code></pre>
+          <div id="filenameContainer">
+            <h3>Nom du fichier</h3>
+            <div id="filename"></div>
+          </div>
 
-        <button id="runButton">Exécuter</button>
-        <div id="executionLog"></div>
+          <div id="fileContentContainer">
+            <h3>Contenu du fichier</h3>
+            <div id="inputFile"></div>
+          </div>
 
-        <h3 id="filename">fruits.txt</h3>
-        <pre id="inputFile">
-pêche
-pomme
-poire
-abricot
-banane
-fraise
-kiwi
-  </pre>
+          <pre id="error"></pre>
+
+        </pre>
         <pre id="error"></pre>
 
         <h3>résultat</h3>
         <pre id="output"></pre>
       </div>
 
-      <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+      <div id="blocklyDiv"></div>
     </div>
 
   </body>

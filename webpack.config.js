@@ -9,11 +9,16 @@ const config = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
-    publicPath: 'https://waningcrescendo.github.io/unix-filters-blockly/'
+    publicPath: '/'
   },
   // Enable webpack-dev-server to get hot refresh of the app.
   devServer: {
-    static: './build'
+    static: {
+      directory: path.join(__dirname, 'public'),
+      publicPath: '/'
+    },
+    port: 3000,
+    open: true
   },
   module: {
     rules: [
@@ -57,6 +62,7 @@ module.exports = (env, argv) => {
   } else {
     config.output.path = path.resolve(__dirname, 'dist')
     config.devtool = 'source-map'
+    config.output.publicPath = 'https://waningcrescendo.github.io/unix-filters-blockly/'
   }
   return config
 }

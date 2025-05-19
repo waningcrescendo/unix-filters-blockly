@@ -1,0 +1,13 @@
+{
+  "title": "Exercice 1",
+  "toolbox": [
+    { "kind": "block", "type": "command_cat" },
+    { "kind": "block", "type": "command_sort" },
+    { "kind": "block", "type": "command_grep" }
+  ],
+  "maxBlocks": 2,
+  "guideline": "Affiche le contenu du fichier 'fruits.txt'.",
+  "filename": "fruits.txt",
+  "fileContent": "pêche\npomme\npoire\nabricot\nbanane\nkiwi\nfraise",
+  "expectedResult": "pêche\npomme\npoire\nabricot\nbanane\nkiwi\nfraise\n"
+}

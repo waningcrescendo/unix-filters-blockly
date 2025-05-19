@@ -1,0 +1,14 @@
+{
+  "title": "Exercice 3",
+  "toolbox": [
+    { "kind": "block", "type": "command_cat" },
+    { "kind": "block", "type": "command_pipe" },
+    { "kind": "block", "type": "command_sort" },
+    { "kind": "block", "type": "option_k" },
+    { "kind": "block", "type": "option_n" }
+  ],
+  "guideline": "Trie les lignes par salaire croissant.",
+  "filename": "wages.txt",
+  "fileContent": "alice 7200\nbob 4800\nclaire 9100\ndaniel 3150\neve 6700\nfrank 10000\ngeorge 9999\nhannah 5500\nirene 4300\njack 7800",
+  "expectedResult": "daniel 3150\nirene 4300\nbob 4800\nhannah 5500\neve 6700\nalice 7200\njack 7800\nclaire 9100\ngeorge 9999\nfrank 10000"
+}
