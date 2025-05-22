@@ -11,35 +11,93 @@ import bashEmulator from 'bash-emulator'
 
 Blockly.common.defineBlocks(blocks)
 
+// const exerciseStatus = {
+//   exo1: false,
+//   exo2: false,
+//   exo3: false
+// }
 let workspace = null
 let programBlock = null
 let outputDiv, errorDiv, executionDiv, generatedCodeDiv
 let currentExerciseId = null
 let currentEmulator = null
 const exercises = {}
+const $ = (id) => document.getElementById(id)
 
 document.addEventListener('DOMContentLoaded', () => {
-  outputDiv = document.getElementById('output')
-  errorDiv = document.getElementById('error')
-  executionDiv = document.getElementById('executionLog')
-  generatedCodeDiv = document.getElementById('generatedCode')
+  // $('homeTab').classList.add('active')
+  // updateExerciseListView()
 
-  document.getElementById('runButton').addEventListener('click', () => runProgram(programBlock))
+  // $('homeView').style.display = 'block'
+  // $('blocklyDiv').style.display = 'none'
+  // $('contentTitle').style.display = 'none'
+  // $('resultTitle').style.display = 'none'
+  // $('generatedCode').style.display = 'none'
+  // $('exerciseTitle').style.display = 'none'
+  // $('exerciseGuideline').style.display = 'none'
+  // $('runButton').style.display = 'none'
+  // $('executionLog').style.display = 'none'
+  // $('filenameContainer').style.display = 'none'
+  // $('fileContentContainer').style.display = 'none'
+  // $('error').style.display = 'none'
+  // $('output').style.display = 'none'
 
-  document.getElementById('loadExo1').addEventListener('click', () => {
-    switchExercise('/exercises/ex01/config.json', 'exo1', document.getElementById('loadExo1'))
+  outputDiv = $('output')
+  errorDiv = $('error')
+  executionDiv = $('executionLog')
+  generatedCodeDiv = $('generatedCode')
+
+  $('runButton').addEventListener('click', () => runProgram(programBlock))
+
+  // $('homeTab').addEventListener('click', () => {
+  //   document.querySelectorAll('#loadExo1, #loadExo2, #loadExo3, #homeTab').forEach(btn => {
+  //     btn.classList.remove('active')
+  //   })
+  //   $('homeTab').classList.add('active')
+
+  //   $('homeView').style.display = 'block'
+  //   $('contentTitle').style.display = 'none'
+  //   $('resultTitle').style.display = 'none'
+  //   $('blocklyDiv').style.display = 'none'
+  //   $('generatedCode').style.display = 'none'
+  //   $('exerciseTitle').style.display = 'none'
+  //   $('exerciseGuideline').style.display = 'none'
+  //   $('runButton').style.display = 'none'
+  //   $('executionLog').style.display = 'none'
+  //   $('filenameContainer').style.display = 'none'
+  //   $('fileContentContainer').style.display = 'none'
+  //   $('error').style.display = 'none'
+  //   $('output').style.display = 'none'
+  // })
+
+  $('loadExo1').addEventListener('click', () => {
+    switchExercise('/exercises/ex01/config.json', 'exo1', $('loadExo1'))
   })
 
-  document.getElementById('loadExo2').addEventListener('click', () => {
-    switchExercise('/exercises/ex02/config.json', 'exo2', document.getElementById('loadExo2'))
+  $('loadExo2').addEventListener('click', () => {
+    switchExercise('/exercises/ex02/config.json', 'exo2', $('loadExo2'))
   })
 
-  document.getElementById('loadExo3').addEventListener('click', () => {
-    switchExercise('/exercises/ex03/config.json', 'exo3', document.getElementById('loadExo3'))
+  $('loadExo3').addEventListener('click', () => {
+    switchExercise('/exercises/ex03/config.json', 'exo3', $('loadExo3'))
   })
 })
 
 export async function switchExercise (configPath, exerciseId, buttonElement) {
+  // $('homeView').style.display = 'none'
+  // $('contentTitle').style.display = 'block'
+  // $('resultTitle').style.display = 'block'
+  // $('blocklyDiv').style.display = 'block'
+  // $('generatedCode').style.display = 'block'
+  // $('exerciseTitle').style.display = 'block'
+  // $('exerciseGuideline').style.display = 'block'
+  // $('runButton').style.display = 'inline-block'
+  // $('executionLog').style.display = 'block'
+  // $('filenameContainer').style.display = 'block'
+  // $('fileContentContainer').style.display = 'block'
+  // $('error').style.display = 'block'
+  // $('output').style.display = 'block'
+
   clearDivs()
   document.querySelectorAll('#loadExo1, #loadExo2,#loadExo3').forEach(btn => btn.classList.remove('active'))
   buttonElement.classList.add('active')
@@ -79,10 +137,10 @@ export async function switchExercise (configPath, exerciseId, buttonElement) {
       currentEmulator.setState(exo.emulatorState)
     }
 
-    document.getElementById('exerciseTitle').innerText = exo.title || ''
-    document.getElementById('exerciseGuideline').innerText = exo.guideline || ''
-    document.getElementById('filename').innerText = exo.filename || ''
-    document.getElementById('inputFile').innerText = exo.fileContent || ''
+    $('exerciseTitle').innerText = exo.title || ''
+    $('exerciseGuideline').innerText = exo.guideline || ''
+    $('filename').innerText = exo.filename || ''
+    $('inputFile').innerText = exo.fileContent || ''
   } else {
     try {
       const response = await fetch(configPath)
@@ -138,10 +196,10 @@ export async function switchExercise (configPath, exerciseId, buttonElement) {
         emulatorState: null
       }
 
-      document.getElementById('exerciseTitle').innerText = data.title || ''
-      document.getElementById('exerciseGuideline').innerText = data.guideline || ''
-      document.getElementById('filename').innerText = data.filename || ''
-      document.getElementById('inputFile').innerText = fileContent || ''
+      $('exerciseTitle').innerText = data.title || ''
+      $('exerciseGuideline').innerText = data.guideline || ''
+      $('filename').innerText = data.filename || ''
+      $('inputFile').innerText = fileContent || ''
     } catch (err) {
       console.error('error loading exercise:', err)
     }
@@ -166,7 +224,7 @@ export async function switchExercise (configPath, exerciseId, buttonElement) {
     }
   })
 
-  document.getElementById('runButton').onclick = () => runProgram(programBlock)
+  $('runButton').onclick = () => runProgram(programBlock)
 }
 
 function createProgramBlock () {
@@ -227,6 +285,8 @@ export async function runProgram (rootBlock) {
     if (expected !== undefined) {
       if (output.trim() === expected.trim()) {
         errorDiv.textContent += 'Exercice réussi !'
+        // exerciseStatus[currentExerciseId] = true
+        // updateExerciseListView()
       } else {
         errorDiv.textContent += 'Essaye encore...'
       }
@@ -235,3 +295,20 @@ export async function runProgram (rootBlock) {
     errorDiv.innerHTML = err
   }
 }
+
+// function updateExerciseListView () {
+//   const exerciseList = $('exerciseList')
+//   exerciseList.innerHTML = ''
+
+//   const exerciseNames = {
+//     exo1: 'Exercice 1',
+//     exo2: 'Exercice 2',
+//     exo3: 'Exercice 3'
+//   }
+
+//   Object.keys(exerciseNames).forEach((exoId) => {
+//     const li = document.createElement('li')
+//     li.textContent = `${exerciseNames[exoId]} - ${exerciseStatus[exoId] ? '✅ Réussi' : '❌ À faire'}`
+//     exerciseList.appendChild(li)
+//   })
+// }
